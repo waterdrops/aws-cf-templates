@@ -76,6 +76,7 @@ Metadata:
       - Memory
       - SubnetsReach
       - AutoScaling
+      - Spot
       - DesiredCount
       - MaxCapacity
       - MinCapacity
@@ -325,6 +326,11 @@ Parameters:
     Default: 60
     MinValue: 0
     MaxValue: 1800
+  Spot:
+    Description: 'Run workload on spot capacity?'
+    Type: String
+    Default: false
+    AllowedValues: [true, false]
 Mappings:
   CpuMap:
     '0.25':
@@ -434,6 +440,7 @@ Conditions:
   HasSidecarEnvironment2Key: !Not [!Equals [!Ref SidecarEnvironment2Key, '']]
   HasSidecarEnvironment3Key: !Not [!Equals [!Ref SidecarEnvironment3Key, '']]
   HasWAF: !Not [!Equals [!Ref ParentWAFStack, '']]
+  HasSpot: !Equals [!Ref Spot, 'true']
 Resources:
   RecordSet:
     Condition: HasZone
@@ -715,7 +722,7 @@ Resources:
         - HasProxyImage
         - Name: proxy
           Image: !Ref ProxyImage
-          Command: !If [HasProxyCommand, !Ref ProxyCommand, !Ref 'AWS::NoValue']
+          Command: !If [HasProxyCommand, [!Ref ProxyCommand], !Ref 'AWS::NoValue']
           PortMappings:
           - ContainerPort: !Ref ProxyPort
             Protocol: tcp
@@ -752,7 +759,7 @@ Resources:
         - HasSidecarImage
         - Name: sidecar
           Image: !Ref SidecarImage
-          Command: !If [HasSidecarCommand, !Ref SidecarCommand, !Ref 'AWS::NoValue']
+          Command: !If [HasSidecarCommand, [!Ref SidecarCommand], !Ref 'AWS::NoValue']
           PortMappings:
           - ContainerPort: !Ref SidecarPort
             Protocol: tcp
@@ -793,13 +800,19 @@ Resources:
     Type: 'AWS::ECS::Service'
     DependsOn: HttpListener
     Properties:
+      CapacityProviderStrategy:
+      - Base: 0
+        CapacityProvider: !If [HasSpot, FARGATE_SPOT, FARGATE]
+        Weight: 1
       Cluster: {'Fn::ImportValue': !Sub '${ParentClusterStack}-Cluster'}
       DeploymentConfiguration:
         MaximumPercent: 200
         MinimumHealthyPercent: 100
+        DeploymentCircuitBreaker:
+          Enable: true
+          Rollback: true
       DesiredCount: !Ref DesiredCount
       HealthCheckGracePeriodSeconds: !Ref HealthCheckGracePeriod
-      LaunchType: FARGATE
       LoadBalancers:
       - ContainerName: !If [HasProxyImage, proxy, app]
         ContainerPort: !If [HasProxyImage, !Ref ProxyPort, !Ref AppPort]
@@ -840,7 +853,7 @@ Resources:
     Properties:
       EventPattern:
         source:
-        - 'aws.ec2'
+        - 'aws.ecs'
         'detail-type':
         - 'ECS Service Action'
         resources:

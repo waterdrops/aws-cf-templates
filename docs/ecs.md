@@ -15,6 +15,8 @@ This template describes a fault tolerant and scalable ECS cluster on AWS. The cl
 
 ![Architecture](./img/ecs-cluster.png)
 
+Amazon S3 URL: `https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/ecs/cluster.yaml`
+
 ## Installation Guide
 1. This template depends on one of our [`vpc-*azs.yaml`](./vpc/) templates. [![Launch Stack](./img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/review?templateURL=https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/vpc/vpc-2azs.yaml&stackName=vpc)
 1. [![Launch Stack](./img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/review?templateURL=https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/ecs/cluster.yaml&stackName=ecs-cluster&param_ParentVPCStack=vpc)
@@ -31,6 +33,7 @@ This template describes a fault tolerant and scalable ECS cluster on AWS. The cl
 * `vpc/vpc-*-bastion.yaml` (recommended)
 * `operations/alert.yaml` (recommended)
 * `security/auth-proxy-*.yaml`
+* `security/waf.yaml`
 * `state/s3.yaml`
 * `state/client-sg.yaml`
 
@@ -38,6 +41,8 @@ This template describes a fault tolerant and scalable ECS cluster on AWS. The cl
 This template describes a fault tolerant, scalable, and cost optimized ECS cluster on AWS. The cluster scales out event driven and scales in based on memory and CPU reservation. In case of a scale down, the instance drains all containers before it is terminated.
 
 ![Architecture](./img/ecs-cluster.png)
+
+Amazon S3 URL: `https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/ecs/cluster-cost-optimized.yaml`
 
 ## Installation Guide
 1. This templates depends on one of our [`vpc-*azs.yaml`](./vpc/) templates. [![Launch Stack](./img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/review?templateURL=https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/vpc/vpc-2azs.yaml&stackName=vpc)
@@ -77,6 +82,8 @@ This template describes a fault tolerant and scalable ECS service that uses the 
 
 ![Architecture](./img/ecs-service-cluster-alb.png)
 
+Amazon S3 URL: `https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/ecs/service-cluster-alb.yaml`
+
 ### Installation Guide
 1. This template depends on our `cluster.yaml` template. [![Launch Stack](./img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/review?templateURL=https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/ecs/cluster.yaml&stackName=ecs-cluster&param_ParentVPCStack=vpc)
 1. [![Launch Stack](./img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/review?templateURL=https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/ecs/service-cluster-alb.yaml&stackName=ecs-service&param_ParentClusterStack=ecs-cluster&param_Image=widdix/hello:v1)
@@ -98,6 +105,8 @@ This template describes a fault tolerant and scalable ECS service that uses a de
 
 ![Architecture](./img/ecs-service-dedicated-alb.png)
 
+Amazon S3 URL: `https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/ecs/service-dedicated-alb.yaml`
+
 ### Installation Guide
 1. This template depends on one of our [`vpc-*azs.yaml`](./vpc/) templates. [![Launch Stack](./img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/review?templateURL=https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/vpc/vpc-2azs.yaml&stackName=vpc)
 1. This template depends on our `cluster.yaml` template. [![Launch Stack](./img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/review?templateURL=https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/ecs/cluster.yaml&stackName=ecs-cluster&param_ParentVPCStack=vpc)
@@ -115,5 +124,6 @@ This template describes a fault tolerant and scalable ECS service that uses a de
 * `ecs/cluster.yaml` (**required**)
 * `operations/alert.yaml` (recommended)
 * `security/auth-proxy-*.yaml`
+* `security/waf.yaml`
 * `vpc/zone-*.yaml`
 * `state/s3.yaml*`

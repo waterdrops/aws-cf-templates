@@ -43,6 +43,8 @@ To improve the default CloudFront behavior, we developed a Lambda@Edge solution 
 | `/folder/`           | 200 Content of index.html  |
 | `/folder/index.html` | 302 Redirect to `/folder/` |
 
+Amazon S3 URL: `https://s3-eu-west-1.amazonaws.com/widdix-aws-cf-templates-releases-eu-west-1/__VERSION__/static-website/static-website.yaml`
+
 ## Installation Guide
 
 1. Switch to the us-east-1 (N. Virginia) region.
@@ -73,3 +75,4 @@ To improve the default CloudFront behavior, we developed a Lambda@Edge solution 
 * `vpc/zone-*.yaml` (**required**)
 * `operations/alert.yaml` (recommended)
 * `state/s3.yaml` (recommended)
+* `security/waf.yaml`
